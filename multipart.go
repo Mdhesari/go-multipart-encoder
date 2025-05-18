@@ -151,6 +151,7 @@ func Encode(req any) (*bytes.Buffer, string, error) {
 	return &b, w.FormDataContentType(), nil
 }
 
+// getExtensionFromContent first detects content type then gets file type by the provided content type using http and mime packages
 func getExtensionFromContent(data []byte) string {
 	t := http.DetectContentType(data)
 	s, err := mime.ExtensionsByType(t)
