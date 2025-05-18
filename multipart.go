@@ -14,7 +14,7 @@ import (
 )
 
 // DefaultFileExtension is used when a file's extension cannot be detected
-const DefaultFileExtension = ".bin"
+const DefaultFileExtension = ""
 
 // EncodeMultipart converts a struct into multipart form-data format.
 // It returns a buffer containing the encoded data, the content type string,
@@ -32,7 +32,7 @@ const DefaultFileExtension = ".bin"
 // - `form:"fieldname"` sets the form field name (defaults to lowercase field name)
 // - `form:"-"` skips the field
 // - `filename:"custom.ext"` sets custom filename for []byte fields
-func EncodeMultipart(req any) (*bytes.Buffer, string, error) {
+func EncodeMultipart(req any) (string, string, error) {
 	var b bytes.Buffer
 	w := multipart.NewWriter(&b)
 
@@ -42,7 +42,7 @@ func EncodeMultipart(req any) (*bytes.Buffer, string, error) {
 	}
 
 	if v.Kind() != reflect.Struct {
-		return nil, "", fmt.Errorf("req must be a struct")
+		return "", "", fmt.Errorf("req must be a struct")
 	}
 
 	t := v.Type()
@@ -140,15 +140,15 @@ func EncodeMultipart(req any) (*bytes.Buffer, string, error) {
 		}
 
 		if err != nil {
-			return nil, "", err
+			return "", "", err
 		}
 	}
 
 	if err := w.Close(); err != nil {
-		return nil, "", fmt.Errorf("failed to close multipart writer %w", err)
+		return "", "", fmt.Errorf("failed to close multipart writer %w", err)
 	}
 
-	return &b, w.FormDataContentType(), nil
+	return b.String(), w.FormDataContentType(), nil
 }
 
 func getExtensionFromContent(data []byte) string {
@@ -157,6 +157,11 @@ func getExtensionFromContent(data []byte) string {
 	if err != nil || len(s) == 0 {
 
 		return ""
+	}
+
+	if s[0] == ".jpe" {
+
+		return ".jpg"
 	}
 
 	return s[0]
