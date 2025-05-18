@@ -45,7 +45,7 @@ func TestEncodeMultipart(t *testing.T) {
 		t.Fatalf("EncodeMultipart returned an error: %v", err)
 	}
 
-	if buf == "" {
+	if buf == nil {
 		t.Fatal("EncodeMultipart returned a nil buffer")
 	}
 
@@ -55,7 +55,7 @@ func TestEncodeMultipart(t *testing.T) {
 
 	// The multipart boundary is random, so we can't check the exact output
 	// But we can check that it contains expected substrings
-	output := buf
+	output := buf.String()
 
 	// Check form fields
 	if !contains(output, `name="name"`) || !contains(output, "John Doe") {

@@ -32,7 +32,7 @@ const DefaultFileExtension = ""
 // - `form:"fieldname"` sets the form field name (defaults to lowercase field name)
 // - `form:"-"` skips the field
 // - `filename:"custom.ext"` sets custom filename for []byte fields
-func EncodeMultipart(req any) (string, string, error) {
+func EncodeMultipart(req any) (*bytes.Buffer, string, error) {
 	var b bytes.Buffer
 	w := multipart.NewWriter(&b)
 
@@ -42,7 +42,7 @@ func EncodeMultipart(req any) (string, string, error) {
 	}
 
 	if v.Kind() != reflect.Struct {
-		return "", "", fmt.Errorf("req must be a struct")
+		return nil, "", fmt.Errorf("req must be a struct")
 	}
 
 	t := v.Type()
@@ -140,15 +140,15 @@ func EncodeMultipart(req any) (string, string, error) {
 		}
 
 		if err != nil {
-			return "", "", err
+			return nil, "", err
 		}
 	}
 
 	if err := w.Close(); err != nil {
-		return "", "", fmt.Errorf("failed to close multipart writer %w", err)
+		return nil, "", fmt.Errorf("failed to close multipart writer %w", err)
 	}
 
-	return b.String(), w.FormDataContentType(), nil
+	return &b, w.FormDataContentType(), nil
 }
 
 func getExtensionFromContent(data []byte) string {
