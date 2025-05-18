@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"log"
-	"mdhesari/multipart-encoder"
+	"mdhesari/go-multipart-encoder"
 	"net/http"
 	"os"
 )

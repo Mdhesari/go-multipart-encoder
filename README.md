@@ -30,7 +30,7 @@ package main
 
 import (
     "fmt"
-    "github.com/mdhesari/multipart-encoder"
+    "github.com/mdhesari/go-multipart-encoder"
     "net/http"
 )
 
