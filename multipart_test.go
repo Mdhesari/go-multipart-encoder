@@ -40,7 +40,7 @@ func TestEncodeMultipart(t *testing.T) {
 		},
 	}
 
-	buf, contentType, err := EncodeMultipart(req)
+	buf, contentType, err := Encode(req)
 	if err != nil {
 		t.Fatalf("EncodeMultipart returned an error: %v", err)
 	}

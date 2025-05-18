@@ -16,7 +16,7 @@ import (
 // DefaultFileExtension is used when a file's extension cannot be detected
 const DefaultFileExtension = ""
 
-// EncodeMultipart converts a struct into multipart form-data format.
+// Encode converts a struct into multipart form-data format.
 // It returns a buffer containing the encoded data, the content type string,
 // and any error that occurred during encoding.
 //
@@ -32,7 +32,7 @@ const DefaultFileExtension = ""
 // - `form:"fieldname"` sets the form field name (defaults to lowercase field name)
 // - `form:"-"` skips the field
 // - `filename:"custom.ext"` sets custom filename for []byte fields
-func EncodeMultipart(req any) (*bytes.Buffer, string, error) {
+func Encode(req any) (*bytes.Buffer, string, error) {
 	var b bytes.Buffer
 	w := multipart.NewWriter(&b)
 

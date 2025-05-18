@@ -34,7 +34,7 @@ func main() {
 	}
 
 	// Encode the struct as multipart form-data
-	buf, contentType, err := multipart.EncodeMultipart(req)
+	buf, contentType, err := multipart.Encode(req)
 	if err != nil {
 		log.Fatalf("Failed to encode multipart form: %v", err)
 	}
