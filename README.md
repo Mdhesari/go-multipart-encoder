@@ -18,7 +18,7 @@ A Go package that simplifies encoding structs as multipart/form-data requests. T
 ## Installation
 
 ```bash
-go get github.com/yourusername/multipart
+go get github.com/mdhesari/go-multipart-encoder
 ```
 
 ## Usage
