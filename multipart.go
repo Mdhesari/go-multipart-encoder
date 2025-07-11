@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log/slog"
 	"mime"
 	"mime/multipart"
 	"net/http"
@@ -99,12 +100,14 @@ func Encode(req any) (*bytes.Buffer, string, error) {
 			if field.Type().Elem().Kind() == reflect.Uint8 && !field.IsNil() {
 				filename := fieldType.Tag.Get("filename")
 				if filename == "" {
-					ext := getExtensionFromContent(field.Bytes())
-					if ext == "" {
-						ext = DefaultFileExtension
-					}
-					filename = fieldName + ext
+					filename = fieldName
 				}
+
+				ext := getExtensionFromContent(field.Bytes())
+				if ext == "" {
+					ext = DefaultFileExtension
+				}
+				filename = filename + "." + ext
 
 				fw, err = w.CreateFormFile(fieldName, filename)
 				if err == nil {
@@ -155,7 +158,13 @@ func Encode(req any) (*bytes.Buffer, string, error) {
 func getExtensionFromContent(data []byte) string {
 	t := http.DetectContentType(data)
 	s, err := mime.ExtensionsByType(t)
-	if err != nil || len(s) == 0 {
+	if err != nil {
+		slog.Error("could not detect mime type of file content", "err", err)
+
+		return ""
+	}
+	if len(s) == 0 {
+		slog.Error("could not detect mime type of file content")
 
 		return ""
 	}
