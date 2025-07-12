@@ -105,7 +105,7 @@ func Encode(req any) (*bytes.Buffer, string, error) {
 				if ext == "" {
 					ext = DefaultFileExtension
 				}
-				filename = filename + "." + ext
+				filename = filename + ext
 
 				fw, err = w.CreateFormFile(fieldName, filename)
 				if err == nil {
