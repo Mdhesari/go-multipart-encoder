@@ -4,11 +4,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/gabriel-vasile/mimetype"
 	"io"
-	"log/slog"
-	"mime"
 	"mime/multipart"
-	"net/http"
 	"reflect"
 	"strconv"
 	"strings"
@@ -156,23 +154,18 @@ func Encode(req any) (*bytes.Buffer, string, error) {
 
 // getExtensionFromContent first detects content type then gets file type by the provided content type using http and mime packages
 func getExtensionFromContent(data []byte) string {
-	t := http.DetectContentType(data)
-	s, err := mime.ExtensionsByType(t)
-	if err != nil {
-		slog.Error("could not detect mime type of file content", "err", err)
+	mimetype.SetLimit(0)
+	mime := mimetype.Detect(data)
+	ext := mime.Extension()
+	if ext == "" {
+		fmt.Println("could not detect mime type of file content")
 
 		return ""
 	}
-	if len(s) == 0 {
-		slog.Error("could not detect mime type of file content")
-
-		return ""
-	}
-
-	if s[0] == ".jpe" {
+	if ext == ".jpe" {
 
 		return ".jpg"
 	}
 
-	return s[0]
+	return ext
 }
